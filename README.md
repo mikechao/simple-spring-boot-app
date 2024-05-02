@@ -4,6 +4,21 @@ This is a simple Spring Boot App for the purposes of demonstrating how to deploy
 
 Fly.io is a cloud platform and application deployment service that specializes in running applications close to users via an edge network.
 
+- [Prerequisites](#prerequisites)
+  - [Windows Subsystem for Linux WSL](#windows-subsystem-for-linux-wsl)
+  - [Installing flyctl](#installing-flyctl)
+- [Coding the Spring Boot application](#coding-the-spring-boot-application)
+- [Deploying to fly.io](#deploying-to-flyio)
+  - [Create the Dockefile](#create-the-dockefile)
+  - [Clean up the first deployment](#clean-up-the-first-deployment)
+  - [Create a Volume](#create-a-volume)
+  - [Bind our Spring Boot App to 0.0.0.0](#bind-our-spring-boot-app-to-0000)
+  - [Redeploy the app with changes](#redeploy-the-app-with-changes)
+  - [Success!](#success)
+- [More tweaking](#more-tweaking)
+  - [Setting Environment Variables](#setting-environment-variables)
+  - [Lower the memory we are using](#lower-the-memory-we-are-using)
+
 ## Prerequisites
 
 Make sure you have the the tools/JDKs listed below installed and have signed up for fly.io account.
