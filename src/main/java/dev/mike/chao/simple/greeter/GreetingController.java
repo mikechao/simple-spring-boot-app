@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+
 @RestController
 public class GreetingController {
 
@@ -16,12 +19,19 @@ public class GreetingController {
   @Qualifier("envGreeting")
   Greeting envGreeting;
 
-  int count = 0;
+  private final Counter greetingCounter;
+
+  public GreetingController(@Autowired MeterRegistry meterRegistry) {
+    greetingCounter = Counter.builder("greetings.count")
+        .description("Number of greetings given")
+        .register(meterRegistry);
+  }
 
   @GetMapping("/")
   String getGreeting() {
+    int count = (int) greetingCounter.count();
     String greeting = (count % 2 == 0) ? stringGreeting.getGreeting() : envGreeting.getGreeting();
-    count++;
+    greetingCounter.increment();
     return greeting;
   }
 }

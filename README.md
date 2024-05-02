@@ -18,6 +18,11 @@ Fly.io is a cloud platform and application deployment service that specializes i
 - [More tweaking](#more-tweaking)
   - [Setting Environment Variables](#setting-environment-variables)
   - [Lower the memory we are using](#lower-the-memory-we-are-using)
+- [Adding some metrics](#adding-some-metrics)
+  - [Dependencies for metrics](#dependencies-for-metrics)
+  - [The code to collect the metrics](#the-code-to-collect-the-metrics)
+  - [Application properties to enable metrics](#application-properties-to-enable-metrics)
+  - [Expose our metrics to fly.io](#expose-our-metrics-to-flyio)
 
 ## Prerequisites
 
@@ -256,3 +261,66 @@ From the memory metric we can see the dip after we changed the memory setting to
 
 We can also see that the `EnvGreeting` bean is returning the value we set in the `[env]` section of `fly.toml`.
 <img src="./assets/web3.png"><br>
+
+## Adding some metrics
+
+We need to be able to monitor the apps that we deploy remotely and an easy way to do that is to take advantage of the infrastructure that fly.io already provides. They have a good write up about it [here](https://fly.io/blog/measuring-fly/).
+
+We need to add some dependencies and properties to our project for metrics to work. Some changes to `fly.toml' is needed as well to tell fly.io where to get our metrics.
+
+### Dependencies for metrics
+
+In build.gradle add the following to the dependencies section
+```
+dependencies {
+...
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+...
+}
+```
+
+### The code to collect the metrics
+
+The changes to [GreetingController.java](./src/main/java/dev/mike/chao/simple/greeter/GreetingController.java) to add collection of metrics is as follows.
+
+```
+  private final Counter greetingCounter;
+
+  public GreetingController(@Autowired MeterRegistry meterRegistry) {
+    greetingCounter = Counter.builder("greetings.count")
+        .description("Number of greetings given")
+        .register(meterRegistry);
+  }
+
+  @GetMapping("/")
+  String getGreeting() {
+    int count = (int) greetingCounter.count();
+    String greeting = (count % 2 == 0) ? stringGreeting.getGreeting() : envGreeting.getGreeting();
+    greetingCounter.increment();
+    return greeting;
+  }
+```
+
+In the constructor the `MeterRegistry` is `@Autowired` in and we use the `Counter.builder` to build the `greetingCounter` object. The `greetingCounter` object is registered with the meterRegistry passed in by Spring.
+
+Then in the getGreeting() method we increment the counter.
+
+### Application properties to enable metrics
+
+We also need to make some changes in `application.properties` to enable metrics and some additional endpoints from `spring-actuator`.
+```
+management.prometheus.metrics.export.enabled=true
+management.endpoints.web.exposure.include=metrics,shutdown,logfile,prometheus
+management.endpoint.shutdown.enabled=true
+endpoints.shutdown.enabled=true
+```
+
+### Expose our metrics to fly.io
+
+In 'fly.toml' add the following block to expose our metrics to fly.io
+```
+[metrics]
+  port = 8080
+  path = "/actuator/prometheus"
+```
