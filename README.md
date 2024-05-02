@@ -1,4 +1,4 @@
-[<img src="./assets/flyiologo.svg" width="100" height="100">](https://fly.io/)[<img src="./assets/springbootlogo.svg" width="100" height="100">](https://spring.io/projects/spring-boot)
+[<img src="./assets/flyiologo.svg" width="200" height="200">](https://fly.io/)[<img src="./assets/springbootlogo.svg" width="200" height="200">](https://spring.io/projects/spring-boot)
 
 This is a simple Spring Boot App for the purposes of demonstrating how to deploy it to fly.io. 
 
@@ -217,7 +217,7 @@ fly launch --local-only
 We use the launch command here instead of deploy because we cleaned up the first deployment so fly.io doesn't know about it. This time I chose to customize the defaults and change the app name to simple-greeting-app.<br>
 
 Launch output
-<img src="./assets/flyLaunchNoDeploy-2.png">
+<img src="./assets/flyLaunchNoDeploy-2.png" width="50%">
 
 The warning about the app not listening on the right address still appears, but go to https://simple-greeting-app.fly.dev/ and see the app run!
 
@@ -230,7 +230,7 @@ We can see our greeting on the web!<br>
 ## More tweaking
 
 fly.io offers some metrics and we can see that our app is only around 160.3 mb of ram. It is a simple app after all. <br>
-<img src="./assets/flyMemory-1.png">
+<img src="./assets/flyMemory-1.png" width="50%">
 
 We also see that the `EnvGreeting` bean is just returning the default value since the environment variable `ENV_GREETING` was not set.<br>
 
@@ -328,7 +328,7 @@ In 'fly.toml' add the following block to expose our metrics to fly.io
 
 ### Seeing our simple metric
 
-After pushing the changes above with the 2 commands below 
+After pushing the changes above to fly.io with the 2 commands below 
 ```
 ./gradlew clean bootJar
 ./fly deploy --local-only
