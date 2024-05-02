@@ -23,6 +23,7 @@ Fly.io is a cloud platform and application deployment service that specializes i
   - [The code to collect the metrics](#the-code-to-collect-the-metrics)
   - [Application properties to enable metrics](#application-properties-to-enable-metrics)
   - [Expose our metrics to fly.io](#expose-our-metrics-to-flyio)
+  - [Seeing our simple metric](#seeing-our-simple-metric)
 
 ## Prerequisites
 
@@ -324,3 +325,38 @@ In 'fly.toml' add the following block to expose our metrics to fly.io
   port = 8080
   path = "/actuator/prometheus"
 ```
+
+### Seeing our simple metric
+
+After pushing the changes above with the 2 commands below 
+```
+./gradlew clean bootJar
+./fly deploy --local-only
+```
+there are 2 ways to view our metric.
+
+We can use an app like Postman to hit the actuator endpoint that we expose.<br>
+<img src="./assets/metric-postman.png" width="25%">
+<br>
+
+Or
+
+Go to the metrics page for our app on fly.io and hit the Open all on Grafana button.<br>
+<img src="./assets/Grafana.png" width="50%">
+<br>
+
+This will open [Grafana](https://grafana.com/) page for ALL our apps on fly.io. From here hit the hamburger menu on the left and select Data Source.<br>
+<img src="./assets/Grafana-Data-Sources.png" height="50%">
+
+From the Data Sources page select the Explore button in the Prometheus on Fly section and it will open up the query builder.<br>
+<img src="./assets/Grafan-DS-2.png" width="50%">
+
+In the query builder page find our metric<br>
+<img src="./assets/queyPage.png" width="50%">
+
+Then click add to Dashboard. Pick a Dashboard you want to add it to.<br>
+<img src="./assets/greetingCountMetric.png" width="50%">
+<br>
+⚠️⚠️⚠️<br>
+Notice the discontinuous line. This is because fly.io will suspend the machine when it's proxies detect that there is no traffic to the app.<br>
+⚠️⚠️⚠️
