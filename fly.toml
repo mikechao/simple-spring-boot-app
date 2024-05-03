@@ -27,6 +27,7 @@ primary_region = 'sjc'
 
 [env]
   ENV_GREETING = "Hello from EnvGreeting bean and fly.io"
+  LOG_PATH = "/data/"
 
 [metrics]
   port = 8080
