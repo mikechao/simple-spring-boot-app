@@ -32,7 +32,7 @@ Fly.io is a cloud platform and application deployment service that specializes i
 It's pretty easy to deploy a Spring Boot app to fly.io's platform.  There are a few caveats.
 
 1. The Spring property server.address needs to be set to 0.0.0.0 in application.properties or application.yaml
-2. When launching for the first and a Volume(Persistent storage) is not defined in `fly.toml` 2 fly machines will be created by default. See fly.io's documentation about it [here](https://fly.io/docs/reference/app-availability/#redundancy-by-default-on-first-deploy)
+2. When launching for the first time and a Volume(Persistent storage) is not defined in `fly.toml` 2 fly machines will be created by default. See fly.io's documentation about it [here](https://fly.io/docs/reference/app-availability/#redundancy-by-default-on-first-deploy)
 3. Your Spring Boot app must be in a Docker image, which will be deployed in a Docker container on fly.io's infrastructure.
 4. fly.io's proxy will send a `SIGINT` signal to the running process when it detects there is excess capacity.
 
