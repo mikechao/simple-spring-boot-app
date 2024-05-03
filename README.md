@@ -4,6 +4,7 @@ This is a simple Spring Boot App for the purposes of demonstrating how to deploy
 
 Fly.io is a cloud platform and application deployment service that specializes in running applications close to users via an edge network.
 
+- [TL;DR](#tldr)
 - [Prerequisites](#prerequisites)
   - [Windows Subsystem for Linux WSL](#windows-subsystem-for-linux-wsl)
   - [Installing flyctl](#installing-flyctl)
@@ -24,6 +25,18 @@ Fly.io is a cloud platform and application deployment service that specializes i
   - [Application properties to enable metrics](#application-properties-to-enable-metrics)
   - [Expose our metrics to fly.io](#expose-our-metrics-to-flyio)
   - [Seeing our simple metric](#seeing-our-simple-metric)
+- [Some common fly.io CLI commands](#some-common-flyio-cli-commands)
+
+## TL;DR
+
+It's pretty easy to deploy a Spring Boot app to fly.io's platform.  There are a few caveats.
+
+1. The Spring property server.address needs to be set to 0.0.0.0 in application.properties or application.yaml
+2. When launching for the first and a Volume(Persistent storage) is not defined in `fly.toml` 2 fly machines will be created by default. See fly.io's documentation about it [here](https://fly.io/docs/reference/app-availability/#redundancy-by-default-on-first-deploy)
+3. Your Spring Boot app must be in a Docker image, which will be deployed in a Docker container on fly.io's infrastructure.
+4. fly.io's proxy will send a `SIGINT` signal to the running process when it detects there is excess capacity.
+
+What follows below is details that involve various commands and their outputs that were used to deploy a simple Spring Boot App with 1 REST endpoint.
 
 ## Prerequisites
 
@@ -360,3 +373,34 @@ Then click add to Dashboard. Pick a Dashboard you want to add it to.<br>
 ⚠️⚠️⚠️<br>
 Notice the discontinuous line. This is because fly.io will suspend the machine when it's proxies detect that there is no traffic to the app.<br>
 ⚠️⚠️⚠️
+
+## Some common fly.io CLI commands
+
+Below are some helpful/common fly.io CLI commands. Most, but not all of the commands should be executed from the root directory of the project or where the 'fly.toml' is located.
+
+List the information fly machines your apps are running on. One of the more important ones is the ID.
+```
+fly machine list
+```
+
+Stop a fly machine
+```
+fly machine stop $machineId
+```
+
+Start a fly machine
+```
+fly machine start $machineId
+```
+
+SSH into fly machine
+distroless containers might not work???
+```
+flyctl ssh console
+```
+
+Getting files off the fly machines with SFTP shell
+```
+flyctl ssh sftp shell
+```
+Can navigate around with `ls`, use `get $fileName` to get a file. 
