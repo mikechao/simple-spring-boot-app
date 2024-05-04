@@ -18,7 +18,7 @@ Fly.io is a cloud platform and application deployment service that specializes i
   - [Success!](#success)
 - [More tweaking](#more-tweaking)
   - [Setting Environment Variables](#setting-environment-variables)
-  - [Lower the memory we are using](#lower-the-memory-we-are-using)
+  - [Lower the memory we are using on the fly.io machines](#lower-the-memory-we-are-using-on-the-flyio-machines)
 - [Adding some metrics](#adding-some-metrics)
   - [Dependencies for metrics](#dependencies-for-metrics)
   - [The code to collect the metrics](#the-code-to-collect-the-metrics)
@@ -254,7 +254,10 @@ Edit the `fly.toml` file and add the block below
   ENV_GREETING = "Hello from EnvGreeting bean and fly.io"
 ```
 
-### Lower the memory we are using
+After redeploying we can see that the `EnvGreeting` bean is returning the value we set in the `[env]` section of `fly.toml`.
+<img src="./assets/web3.png"><br>
+
+### Lower the memory we are using on the fly.io machines
 Edit the 'fly.toml' file
 ```
 ...
@@ -271,10 +274,7 @@ fly deploy --local-only
 ```
 
 From the memory metric we can see the dip after we changed the memory setting to 256mb in `fly.toml`.<br>
-<img src="./assets/flyMemory-2.png"><br>
-
-We can also see that the `EnvGreeting` bean is returning the value we set in the `[env]` section of `fly.toml`.
-<img src="./assets/web3.png"><br>
+<img src="./assets/flyMemory-2.png" width="50%"><br>
 
 ## Adding some metrics
 

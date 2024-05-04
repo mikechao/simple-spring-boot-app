@@ -13,8 +13,13 @@ USER spring:spring
  
 ## set the working directory 
 WORKDIR /opt 
- 
-ENTRYPOINT ["java", "-jar", "myApp.jar"] 
- 
+
 ## expose the port to the external world 
 EXPOSE 8080
+
+ENTRYPOINT ["java", \
+  "-XX:+UseSerialGC", \
+  "-XX:MaxRAM=64m", \
+  "-Xss512k",\
+  "-jar", "myApp.jar"] 
+ 
